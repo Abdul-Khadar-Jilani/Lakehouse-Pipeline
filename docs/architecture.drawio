@@ -1,0 +1,228 @@
+<mxfile host="app.diagrams.net" modified="2026-06-26T12:00:00.000Z" agent="5.0" version="24.0.0" type="device">
+  <diagram id="weather-pipeline-arch" name="Weather Data Pipeline">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Background Title -->
+        <mxCell id="title" value="🌦️ Weather Data Pipeline — Medallion Architecture" style="text;html=1;fontSize=22;fontStyle=1;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;fontColor=#1a1a2e;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="800" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="Daily pipeline: Open-Meteo API → GCS → BigQuery → dbt → Power BI | Cities: Hyderabad, Bangalore, Mumbai" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="400" y="55" width="800" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== ORCHESTRATION LAYER ==================== -->
+        <mxCell id="orch-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f4ff;strokeColor=#4361ee;strokeWidth=2;dashed=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="90" width="250" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="orch-label" value="⚙️ ORCHESTRATION" style="text;html=1;fontSize=13;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#4361ee;" vertex="1" parent="1">
+          <mxGeometry x="100" y="98" width="170" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- Airflow -->
+        <mxCell id="airflow" value="&lt;b&gt;Apache Airflow 3.0&lt;/b&gt;&lt;br&gt;Docker Compose&lt;br&gt;LocalExecutor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4361ee;fontColor=#ffffff;strokeColor=#3a56d4;fontSize=11;arcSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="95" y="130" width="180" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- DAG Tasks -->
+        <mxCell id="task1" value="Task 1: ingest_to_gcs&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;PythonOperator&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8edff;strokeColor=#4361ee;fontSize=10;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="95" y="200" width="180" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="task2" value="Task 2: gcs_to_bigquery&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;PythonOperator&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8edff;strokeColor=#4361ee;fontSize=10;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="95" y="240" width="180" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="task3" value="Task 3: dbt_run_staging&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;BashOperator&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8edff;strokeColor=#4361ee;fontSize=10;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="95" y="280" width="180" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="task4" value="Task 4: dbt_test&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;BashOperator&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8edff;strokeColor=#4361ee;fontSize=10;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="95" y="320" width="180" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="task5" value="Task 5: dbt_run_marts&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;BashOperator&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8edff;strokeColor=#4361ee;fontSize=10;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="95" y="360" width="180" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Task arrows -->
+        <mxCell id="t-arrow1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#4361ee;strokeWidth=1;" edge="1" parent="1" source="airflow" target="task1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="t-arrow2" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#4361ee;strokeWidth=1;" edge="1" parent="1" source="task1" target="task2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="t-arrow3" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#4361ee;strokeWidth=1;" edge="1" parent="1" source="task2" target="task3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="t-arrow4" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#4361ee;strokeWidth=1;" edge="1" parent="1" source="task3" target="task4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="t-arrow5" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#4361ee;strokeWidth=1;" edge="1" parent="1" source="task4" target="task5"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ==================== DATA SOURCE ==================== -->
+        <mxCell id="api-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e1;strokeColor=#f9a825;strokeWidth=2;dashed=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="380" y="90" width="200" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="api-label" value="🌐 DATA SOURCE" style="text;html=1;fontSize=13;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#f9a825;" vertex="1" parent="1">
+          <mxGeometry x="405" y="98" width="150" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="api" value="&lt;b&gt;Open-Meteo API&lt;/b&gt;&lt;br&gt;Hourly Weather Forecast&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;temperature_2m, relative_humidity_2m&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f9a825;fontColor=#ffffff;strokeColor=#e08e00;fontSize=11;arcSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="130" width="160" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="cities" value="📍 Hyderabad | Bangalore | Mumbai" style="text;html=1;fontSize=10;align=center;fillColor=none;strokeColor=none;fontColor=#666;" vertex="1" parent="1">
+          <mxGeometry x="395" y="192" width="175" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== BRONZE LAYER ==================== -->
+        <mxCell id="bronze-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#e53935;strokeWidth=2;dashed=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="380" y="260" width="420" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="bronze-label" value="🥉 BRONZE LAYER (Raw)" style="text;html=1;fontSize=13;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#e53935;" vertex="1" parent="1">
+          <mxGeometry x="490" y="268" width="200" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="gcs" value="&lt;b&gt;Google Cloud Storage&lt;/b&gt;&lt;br&gt;de-p1-weather-bronze&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;weather/raw/{city}/{date}/*.json&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#e53935;fontColor=#ffffff;strokeColor=#c62828;fontSize=11;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="300" width="170" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="bq-raw" value="&lt;b&gt;BigQuery&lt;/b&gt;&lt;br&gt;weather_raw.&lt;br&gt;raw_weather_hourly&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Flattened hourly rows&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#e53935;fontColor=#ffffff;strokeColor=#c62828;fontSize=11;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="295" width="170" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== SILVER LAYER ==================== -->
+        <mxCell id="silver-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8eaf6;strokeColor=#5c6bc0;strokeWidth=2;dashed=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="850" y="90" width="300" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="silver-label" value="🥈 SILVER LAYER (Cleaned)" style="text;html=1;fontSize=13;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#5c6bc0;" vertex="1" parent="1">
+          <mxGeometry x="895" y="98" width="210" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dbt-stg" value="&lt;b&gt;dbt Staging Model&lt;/b&gt;&lt;br&gt;stg_weather_hourly&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Parsed timestamps, deduplication&lt;br&gt;null filtering, type casting&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#5c6bc0;fontColor=#ffffff;strokeColor=#4a5ab5;fontSize=11;arcSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="880" y="130" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="bq-silver" value="&lt;b&gt;BigQuery&lt;/b&gt;&lt;br&gt;weather_staging.&lt;br&gt;stg_weather_hourly" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#5c6bc0;fontColor=#ffffff;strokeColor=#4a5ab5;fontSize=11;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="920" y="205" width="160" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dbt-test-badge" value="✅ dbt test&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;not_null, accepted_values&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#c5e1a5;strokeColor=#7cb342;fontSize=10;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="180" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== GOLD LAYER ==================== -->
+        <mxCell id="gold-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#fb8c00;strokeWidth=2;dashed=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="850" y="320" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="gold-label" value="🥇 GOLD LAYER (Aggregated)" style="text;html=1;fontSize=13;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#fb8c00;" vertex="1" parent="1">
+          <mxGeometry x="890" y="328" width="220" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dbt-mart" value="&lt;b&gt;dbt Mart Model&lt;/b&gt;&lt;br&gt;mart_weather_daily&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Daily min/max/avg temp &amp; humidity&lt;br&gt;Per city aggregation&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fb8c00;fontColor=#ffffff;strokeColor=#ef6c00;fontSize=11;arcSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="880" y="360" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="bq-gold" value="&lt;b&gt;BigQuery&lt;/b&gt;&lt;br&gt;weather_marts.&lt;br&gt;mart_weather_daily" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#fb8c00;fontColor=#ffffff;strokeColor=#ef6c00;fontSize=11;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="920" y="435" width="160" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== BI LAYER ==================== -->
+        <mxCell id="bi-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#43a047;strokeWidth=2;dashed=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="340" width="200" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="bi-label" value="📊 BI / REPORTING" style="text;html=1;fontSize=13;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#43a047;" vertex="1" parent="1">
+          <mxGeometry x="1248" y="348" width="145" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="powerbi" value="&lt;b&gt;Power BI&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#43a047;fontColor=#ffffff;strokeColor=#2e7d32;fontSize=12;arcSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="385" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="looker" value="&lt;b&gt;Looker Studio&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#43a047;fontColor=#ffffff;strokeColor=#2e7d32;fontSize=12;arcSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="440" width="120" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== CI/CD ==================== -->
+        <mxCell id="cicd-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#ad1457;strokeWidth=2;dashed=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="90" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="cicd-label" value="🔄 CI/CD" style="text;html=1;fontSize=13;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#ad1457;" vertex="1" parent="1">
+          <mxGeometry x="1275" y="95" width="90" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="github" value="&lt;b&gt;GitHub Actions&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;dbt test on push/PR&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ad1457;fontColor=#ffffff;strokeColor=#880e4f;fontSize=11;arcSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1248" y="120" width="145" height="38" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== DATA FLOW ARROWS ==================== -->
+        <!-- API → GCS -->
+        <mxCell id="arrow1" value="JSON" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e53935;strokeWidth=2;fontSize=10;fontColor=#e53935;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="api" target="gcs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- GCS → BQ Raw -->
+        <mxCell id="arrow2" value="Load Job" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e53935;strokeWidth=2;fontSize=10;fontColor=#e53935;" edge="1" parent="1" source="gcs" target="bq-raw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- BQ Raw → dbt Staging -->
+        <mxCell id="arrow3" value="dbt run" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5c6bc0;strokeWidth=2;fontSize=10;fontColor=#5c6bc0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="bq-raw" target="dbt-stg">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="820" y="335" />
+              <mxPoint x="820" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- dbt Staging → BQ Silver -->
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#5c6bc0;strokeWidth=2;" edge="1" parent="1" source="dbt-stg" target="bq-silver">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- BQ Silver → dbt test -->
+        <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#7cb342;strokeWidth=2;" edge="1" parent="1" source="bq-silver" target="dbt-test-badge">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- dbt test → dbt Mart -->
+        <mxCell id="arrow6" value="✓ pass" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#fb8c00;strokeWidth=2;fontSize=10;fontColor=#7cb342;" edge="1" parent="1" source="dbt-test-badge" target="dbt-mart">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1240" y="310" />
+              <mxPoint x="840" y="310" />
+              <mxPoint x="840" y="390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- dbt Mart → BQ Gold -->
+        <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#fb8c00;strokeWidth=2;" edge="1" parent="1" source="dbt-mart" target="bq-gold">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- BQ Gold → BI -->
+        <mxCell id="arrow8" value="Query" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#43a047;strokeWidth=2;fontSize=10;fontColor=#43a047;" edge="1" parent="1" source="bq-gold" target="powerbi">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1200" y="467" />
+              <mxPoint x="1200" y="405" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#43a047;strokeWidth=2;" edge="1" parent="1" source="bq-gold" target="looker">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1200" y="467" />
+              <mxPoint x="1200" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Orchestration arrows (dashed) -->
+        <mxCell id="orch-arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#4361ee;strokeWidth=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="task1" target="api">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="216" />
+              <mxPoint x="340" y="158" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ==================== TECH STACK FOOTER ==================== -->
+        <mxCell id="footer" value="&lt;b&gt;Tech Stack:&lt;/b&gt;  Python 3.10 | Apache Airflow 3.0 | Docker Compose | Google Cloud Storage | BigQuery | dbt-bigquery | GitHub Actions | Power BI" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;fillColor=#f5f5f5;strokeColor=#e0e0e0;rounded=1;fontColor=#555;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="250" y="530" width="1100" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
