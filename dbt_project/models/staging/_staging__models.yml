@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: stg_weather_hourly
+    description: >
+      Cleaned hourly weather data (Silver layer).
+      Types are cast, columns renamed, nulls filtered.
+      One row per city per hour.
+    columns:
+      - name: city
+        description: "City name"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["hyderabad", "bangalore", "mumbai"]
+
+      - name: recorded_at
+        description: "Parsed UTC timestamp of the weather reading"
+        tests:
+          - not_null
+
+      - name: temperature_celsius
+        description: "Temperature at 2m height in Celsius"
+        tests:
+          - not_null
+
+      - name: relative_humidity_pct
+        description: "Relative humidity percentage (0–100)"
+        tests:
+          - not_null
+
+      - name: weather_date
+        description: "Date extracted from recorded_at"
+        tests:
+          - not_null
+
+      - name: weather_hour
+        description: "Hour (0–23) extracted from recorded_at"

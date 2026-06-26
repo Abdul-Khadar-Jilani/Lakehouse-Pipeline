@@ -1,0 +1,27 @@
+# Airflow
+logs/
+__pycache__/
+*.pyc
+*.pyo
+
+# Python virtual environment (created by uv)
+.venv/
+
+# GCP credentials — NEVER commit this
+config/gcp-key.json
+
+# Environment variables
+.env
+
+# dbt artifacts
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,28 @@
+version: 2
+
+sources:
+  - name: weather_raw
+    database: gen-lang-client-0461437803
+    schema: weather_raw
+    tables:
+      - name: raw_weather_hourly
+        description: >
+          Raw hourly weather data from Open-Meteo API (Bronze layer).
+          One row per city per hour. Loaded from GCS JSON files.
+        columns:
+          - name: city
+            description: "City name (hyderabad, bangalore, mumbai)"
+          - name: latitude
+            description: "Weather station latitude"
+          - name: longitude
+            description: "Weather station longitude"
+          - name: time
+            description: "ISO 8601 timestamp string from API (e.g. 2026-06-25T14:00)"
+          - name: temperature_2m
+            description: "Temperature at 2m height in Celsius"
+          - name: relative_humidity_2m
+            description: "Relative humidity at 2m height in percent"
+          - name: ingested_at
+            description: "UTC timestamp when the record was loaded into BigQuery"
+          - name: source_file
+            description: "GCS URI of the source JSON file"

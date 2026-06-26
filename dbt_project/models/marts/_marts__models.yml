@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: mart_weather_daily
+    description: >
+      Daily weather aggregates per city (Gold layer).
+      Contains min/max/avg temperature and humidity.
+      Designed for Power BI and Looker Studio dashboards.
+    columns:
+      - name: city
+        description: "City name (hyderabad, bangalore, mumbai)"
+        tests:
+          - not_null
+
+      - name: weather_date
+        description: "Aggregation date"
+        tests:
+          - not_null
+
+      - name: latitude
+        description: "Weather station latitude"
+
+      - name: longitude
+        description: "Weather station longitude"
+
+      - name: min_temp_celsius
+        description: "Daily minimum temperature in Celsius"
+
+      - name: max_temp_celsius
+        description: "Daily maximum temperature in Celsius"
+
+      - name: avg_temp_celsius
+        description: "Daily average temperature in Celsius"
+
+      - name: min_humidity_pct
+        description: "Daily minimum relative humidity percentage"
+
+      - name: max_humidity_pct
+        description: "Daily maximum relative humidity percentage"
+
+      - name: avg_humidity_pct
+        description: "Daily average relative humidity percentage"
+
+      - name: record_count
+        description: "Number of hourly readings for the day (expected: 24)"
+        tests:
+          - not_null
+
+      - name: last_ingested_at
+        description: "Most recent ingestion timestamp for the day's data"

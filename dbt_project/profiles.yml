@@ -1,0 +1,12 @@
+weather_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: gen-lang-client-0461437803
+      dataset: weather_raw
+      threads: 4
+      timeout_seconds: 300
+      location: US
+      keyfile: /opt/airflow/config/gcp-key.json
