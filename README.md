@@ -2,7 +2,7 @@
 
 A production-grade **end-to-end data engineering pipeline** that ingests hourly weather data for Indian cities, transforms it through Bronze → Silver → Gold layers, and serves it to BI dashboards.
 
-![Architecture](docs/architecture.drawio)
+![Architecture](docs/image.png)
 
 > Open `docs/architecture.drawio` in [draw.io](https://app.diagrams.net/) or the VS Code Draw.io extension to view the full visual architecture.
 
