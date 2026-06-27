@@ -395,6 +395,9 @@ DAG files, scripts, and dbt models are mounted as Docker volumes. This means cod
 2. Project: `gen-lang-client-0461437803`
 3. Table: `weather_marts.mart_weather_daily`
 
+Report Image: [PBIReport](docs/PBIReport.png)
+Report File: [PBIReport](docs/PBIReport.pbix)
+
 ### Looker Studio
 1. Add Data → BigQuery
 2. Project: `gen-lang-client-0461437803`
